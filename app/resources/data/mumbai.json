@@ -1,0 +1,80 @@
+{
+    "city": "Mumbai",
+    "country": "India",
+    "categories": {
+        "markets": [
+            {
+                "name": "Colaba Causeway",
+                "description": "Lively street market famous for jewelry, clothes, and antiques."
+            },
+            {
+                "name": "Crawford Market",
+                "description": "Historic wholesale market for fresh produce, spices, and pets."
+            },
+            {
+                "name": "Chor Bazaar",
+                "description": "One of the largest flea markets in India, known for vintage items."
+            }
+        ],
+        "heritage": [
+            {
+                "name": "Gateway of India",
+                "description": "Arch-monument built in the 20th century to commemorate the visit of King George V."
+            },
+            {
+                "name": "Chhatrapati Shivaji Terminus",
+                "description": "UNESCO World Heritage railway station and an architectural marvel."
+            },
+            {
+                "name": "Elephanta Caves",
+                "description": "UNESCO-listed rock-cut cave temples on Elephanta Island."
+            },
+            {
+                "name": "Haji Ali Dargah",
+                "description": "Mosque and tomb located on a tiny islet off the coast of Worli."
+            }
+        ],
+        "food": [
+            {
+                "name": "Leopold Cafe",
+                "description": "Famous and historic restaurant on Colaba Causeway, a Mumbai landmark."
+            },
+            {
+                "name": "Bademiya",
+                "description": "Iconic late-night street food spot known for its seekh kebabs."
+            },
+            {
+                "name": "Kyani & Co.",
+                "description": "One of the oldest Parsi Irani cafes in Mumbai, famous for its mawa cakes."
+            }
+        ],
+        "nature": [
+            {
+                "name": "Marine Drive",
+                "description": "Famous seaside promenade along the coast of the Arabian Sea."
+            },
+            {
+                "name": "Sanjay Gandhi National Park",
+                "description": "Large protected area within city limits, home to the Kanheri Caves."
+            },
+            {
+                "name": "Juhu Beach",
+                "description": "One of Mumbai's most popular beaches, known for its street food stalls."
+            }
+        ],
+        "entertainment": [
+            {
+                "name": "Prithvi Theatre",
+                "description": "Historic theatre venue dedicated to promoting performing arts."
+            },
+            {
+                "name": "NCPA (National Centre for the Performing Arts)",
+                "description": "India's premier cultural institution for music, dance, and theatre."
+            },
+            {
+                "name": "Film City",
+                "description": "Major film studio complex and home to the Bollywood film industry."
+            }
+        ]
+    }
+}

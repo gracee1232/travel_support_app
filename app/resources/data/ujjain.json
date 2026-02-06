@@ -1,0 +1,80 @@
+{
+    "city": "Ujjain",
+    "country": "India",
+    "categories": {
+        "markets": [
+            {
+                "name": "Freegunj Market",
+                "description": "A bustling commercial hub for clothing, electronics, and local goods."
+            },
+            {
+                "name": "Tower Chowk",
+                "description": "Popular area for traditional textiles and local jewelry."
+            },
+            {
+                "name": "Bada Bazaar",
+                "description": "Historic market area known for traditional Ujjaini crafts and religious items."
+            }
+        ],
+        "heritage": [
+            {
+                "name": "Mahakaleshwar Jyotirlinga",
+                "description": "One of the twelve most sacred Jyotirlingas, famous for its Bhasma Aarti."
+            },
+            {
+                "name": "Kal Bhairav Temple",
+                "description": "Ancient temple where liquor is offered to the deity as part of the ritual."
+            },
+            {
+                "name": "Ram Ghat",
+                "description": "Historic bathing ghat on the Shipra River, central to the Kumbh Mela."
+            },
+            {
+                "name": "Ved Shala (Jantar Mantar)",
+                "description": "Astronomical observatory built by Maharaja Jai Singh II in 1725."
+            }
+        ],
+        "food": [
+            {
+                "name": "Ujjaini Namkeen Stalls",
+                "description": "Famous for spicy local snacks like sev and kachoris near the temple area."
+            },
+            {
+                "name": "Shiv Sagar Restaurant",
+                "description": "Popular spot for authentic Malwi cuisine and thalis."
+            },
+            {
+                "name": "Kulfi Stalls at Tower Chowk",
+                "description": "Traditional dessert spots frequented by locals."
+            }
+        ],
+        "nature": [
+            {
+                "name": "Shipra River Bank",
+                "description": "Sacred river offering peaceful views and ritualistic experiences (Ghats)."
+            },
+            {
+                "name": "Vikram Vatika",
+                "description": "Lush garden and park dedicated to the legendary King Vikramaditya."
+            },
+            {
+                "name": "Siddhavat",
+                "description": "Sacred Banyan tree on the banks of the Shipra, believed to be thousands of years old."
+            }
+        ],
+        "entertainment": [
+            {
+                "name": "Simhastha Grounds",
+                "description": "Open area where the massive Kumbh Mela congregation takes place every 12 years."
+            },
+            {
+                "name": "Triveni Museum",
+                "description": "Art and archaeology museum showcasing the religious heritage of the city."
+            },
+            {
+                "name": "Kalidas Academy",
+                "description": "Center for classical theatre and traditional performing arts."
+            }
+        ]
+    }
+}

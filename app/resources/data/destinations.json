@@ -1,0 +1,84 @@
+{
+    "destinations": [
+        {
+            "country": "France",
+            "cities": [
+                "Paris",
+                "Nice",
+                "Lyon",
+                "Marseille"
+            ]
+        },
+        {
+            "country": "United Kingdom",
+            "cities": [
+                "London",
+                "Edinburgh",
+                "Manchester",
+                "Bath"
+            ]
+        },
+        {
+            "country": "Japan",
+            "cities": [
+                "Tokyo",
+                "Kyoto",
+                "Osaka",
+                "Hiroshima"
+            ]
+        },
+        {
+            "country": "USA",
+            "cities": [
+                "New York",
+                "Los Angeles",
+                "Chicago",
+                "San Francisco",
+                "Miami"
+            ]
+        },
+        {
+            "country": "UAE",
+            "cities": [
+                "Dubai",
+                "Abu Dhabi"
+            ]
+        },
+        {
+            "country": "India",
+            "cities": [
+                "Delhi",
+                "Mumbai",
+                "Jaipur",
+                "Ujjain",
+                "Goa",
+                "Indore"
+            ]
+        },
+        {
+            "country": "Italy",
+            "cities": [
+                "Rome",
+                "Florence",
+                "Venice",
+                "Milan"
+            ]
+        },
+        {
+            "country": "Thailand",
+            "cities": [
+                "Bangkok",
+                "Phuket",
+                "Chiang Mai"
+            ]
+        },
+        {
+            "country": "Australia",
+            "cities": [
+                "Sydney",
+                "Melbourne",
+                "Brisbane"
+            ]
+        }
+    ]
+}

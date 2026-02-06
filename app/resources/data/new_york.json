@@ -1,0 +1,80 @@
+{
+    "city": "New York",
+    "country": "USA",
+    "categories": {
+        "markets": [
+            {
+                "name": "Chelsea Market",
+                "description": "Famous indoor food hall and shopping mall housed in a historic factory."
+            },
+            {
+                "name": "Union Square Greenmarket",
+                "description": "Iconic farmers' market featuring local produce and artisanal goods."
+            },
+            {
+                "name": "Grand Bazaar NYC",
+                "description": "The city's largest weekly curated market on the Upper West Side."
+            }
+        ],
+        "heritage": [
+            {
+                "name": "Statue of Liberty",
+                "description": "Iconic symbol of freedom located on Liberty Island."
+            },
+            {
+                "name": "Empire State Building",
+                "description": "Art Deco skyscraper and former world's tallest building."
+            },
+            {
+                "name": "Metropolitan Museum of Art",
+                "description": "The largest art museum in the Americas, spanning 5,000 years of history."
+            },
+            {
+                "name": "9/11 Memorial & Museum",
+                "description": "Tribute of remembrance and honor to the victims of the 2001 terrorist attacks."
+            }
+        ],
+        "food": [
+            {
+                "name": "Katz's Delicatessen",
+                "description": "Historic kosher-style deli famous for its pastrami sandwiches."
+            },
+            {
+                "name": "Peter Luger Steak House",
+                "description": "Legendary Brooklyn steakhouse established in 1887."
+            },
+            {
+                "name": "Joe's Pizza",
+                "description": "Classic Greenwich Village institution for authentic New York slices."
+            }
+        ],
+        "nature": [
+            {
+                "name": "Central Park",
+                "description": "Urban oasis in Manhattan featuring meadows, lakes, and recreational facilities."
+            },
+            {
+                "name": "The High Line",
+                "description": "Linear park built on a historic elevated freight rail line."
+            },
+            {
+                "name": "Brooklyn Botanic Garden",
+                "description": "Renowned garden known for its cherry blossoms and Japanese Hill-and-Pond Garden."
+            }
+        ],
+        "entertainment": [
+            {
+                "name": "Broadway Theatre District",
+                "description": "World-famous hub of live theater performances."
+            },
+            {
+                "name": "Radio City Music Hall",
+                "description": "Historic entertainment venue and home of the Rockettes."
+            },
+            {
+                "name": "Lincoln Center for the Performing Arts",
+                "description": "Premier complex for music, theater, and dance."
+            }
+        ]
+    }
+}

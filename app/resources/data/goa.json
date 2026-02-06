@@ -1,0 +1,80 @@
+{
+    "city": "Goa",
+    "country": "India",
+    "categories": {
+        "markets": [
+            {
+                "name": "Anjuna Flea Market",
+                "description": "Famous Wednesday market offering everything from handicrafts to jewelry."
+            },
+            {
+                "name": "Mapusa Friday Market",
+                "description": "Traditional Goan market showcasing local produce and spices."
+            },
+            {
+                "name": "Saturday Night Market (Arpora)",
+                "description": "Vibrant night market with food, live music, and diverse stalls."
+            }
+        ],
+        "heritage": [
+            {
+                "name": "Basilica of Bom Jesus",
+                "description": "UNESCO World Heritage church housing the remains of St. Francis Xavier."
+            },
+            {
+                "name": "Fort Aguada",
+                "description": "17th-century Portuguese fort and lighthouse with stunning sea views."
+            },
+            {
+                "name": "Old Goa Churches",
+                "description": "Complex of historic Portuguese cathedrals and convents."
+            },
+            {
+                "name": "Se Cathedral",
+                "description": "One of the largest churches in Asia, built in the Portuguese Gothic style."
+            }
+        ],
+        "food": [
+            {
+                "name": "Mum's Kitchen",
+                "description": "Renowned for authentic Goan Mother-style home cooking."
+            },
+            {
+                "name": "Fisherman's Wharf",
+                "description": "Popular riverside spot for fresh seafood and traditional Goan curries."
+            },
+            {
+                "name": "Vinayak Family Restaurant",
+                "description": "Local favorite in Assagao known for its authentic Goan thalis."
+            }
+        ],
+        "nature": [
+            {
+                "name": "Dudhsagar Falls",
+                "description": "Magnificent four-tiered waterfall located in the Bhagwan Mahaveer Sanctuary."
+            },
+            {
+                "name": "Palolem Beach",
+                "description": "Crescent-shaped beach in South Goa known for its calm waters and scenic beauty."
+            },
+            {
+                "name": "Bondla Wildlife Sanctuary",
+                "description": "Mini zoo and sanctuary popular for nature walks and animal sightings."
+            }
+        ],
+        "entertainment": [
+            {
+                "name": "Casino Pride",
+                "description": "Popular floating casino on the Mandovi River."
+            },
+            {
+                "name": "Baga Beach Shacks",
+                "description": "Hub of nightlife and beachfront entertainment in North Goa."
+            },
+            {
+                "name": "Tito's Lane",
+                "description": "Famous street in Baga known for its clubs and bars."
+            }
+        ]
+    }
+}

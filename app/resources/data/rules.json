@@ -1,0 +1,38 @@
+{
+    "itinerary_constraints": {
+        "pace_definitions": {
+            "relaxed": {
+                "max_activities_per_day": 3,
+                "min_duration_minutes": 90,
+                "gap_between_activities_minutes": 60
+            },
+            "moderate": {
+                "max_activities_per_day": 5,
+                "min_duration_minutes": 60,
+                "gap_between_activities_minutes": 30
+            },
+            "packed": {
+                "max_activities_per_day": 8,
+                "min_duration_minutes": 45,
+                "gap_between_activities_minutes": 15
+            }
+        },
+        "time_slots": {
+            "morning": "08:00 - 12:00",
+            "afternoon": "12:00 - 17:00",
+            "evening": "17:00 - 21:00",
+            "night": "21:00 - 00:00"
+        },
+        "default_meal_times": {
+            "breakfast": "08:30",
+            "lunch": "13:00",
+            "dinner": "19:30"
+        },
+        "max_daily_travel_distance_km": 50,
+        "required_buffers": {
+            "airport_arrival": 180,
+            "train_arrival": 60,
+            "hotel_checkin": 30
+        }
+    }
+}

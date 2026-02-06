@@ -1,0 +1,84 @@
+{
+    "city": "Paris",
+    "country": "France",
+    "categories": {
+        "markets": [
+            {
+                "name": "Marché aux Puces de Saint-Ouen",
+                "description": "One of the world's largest and oldest flea markets."
+            },
+            {
+                "name": "Marché d'Aligre",
+                "description": "Authentic local market featuring a mix of food and antiques."
+            },
+            {
+                "name": "Marché des Enfants Rouges",
+                "description": "The oldest covered food market in Paris, popular for ready-to-eat meals."
+            }
+        ],
+        "heritage": [
+            {
+                "name": "Eiffel Tower",
+                "description": "The iconic iron lattice tower, a global symbol of France."
+            },
+            {
+                "name": "Louvre Museum",
+                "description": "World's largest art museum and a historic monument in Paris."
+            },
+            {
+                "name": "Notre-Dame Cathedral",
+                "description": "Masterpiece of French Gothic architecture (currently partially under renovation)."
+            },
+            {
+                "name": "Arc de Triomphe",
+                "description": "Monumental arch dedicated to those who fought for France."
+            },
+            {
+                "name": "Sainte-Chapelle",
+                "description": "Royal chapel with magnificent 13th-century stained glass."
+            }
+        ],
+        "food": [
+            {
+                "name": "Le Procope",
+                "description": "Oldest café in Paris, once frequented by Voltaire and Benjamin Franklin."
+            },
+            {
+                "name": "Les Deux Magots",
+                "description": "Famous literary cafe in Saint-Germain-des-Prés."
+            },
+            {
+                "name": "L'As du Fallafel",
+                "description": "Legendary spot for Middle Eastern street food in the Marais."
+            }
+        ],
+        "nature": [
+            {
+                "name": "Jardin du Luxembourg",
+                "description": "Formal palace gardens with statues and fountains."
+            },
+            {
+                "name": "Tuileries Garden",
+                "description": "Public garden between the Louvre and Place de la Concorde."
+            },
+            {
+                "name": "Bois de Boulogne",
+                "description": "Large public park on the western edge of Paris."
+            }
+        ],
+        "entertainment": [
+            {
+                "name": "Moulin Rouge",
+                "description": "The world-famous birthplace of the can-can dance."
+            },
+            {
+                "name": "Opéra Garnier",
+                "description": "Magnificent 19th-century opera house and inspiration for Phantom of the Opera."
+            },
+            {
+                "name": "Philharmonie de Paris",
+                "description": "State-of-the-art concert hall design by Jean Nouvel."
+            }
+        ]
+    }
+}

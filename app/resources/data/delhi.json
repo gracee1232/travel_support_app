@@ -1,0 +1,80 @@
+{
+    "city": "Delhi",
+    "country": "India",
+    "categories": {
+        "markets": [
+            {
+                "name": "Chandni Chowk",
+                "description": "One of the oldest and busiest markets in Old Delhi, famous for spices and textiles."
+            },
+            {
+                "name": "Dilli Haat",
+                "description": "Open-air food plaza and craft bazaar showcasing Indian culture."
+            },
+            {
+                "name": "Janpath Market",
+                "description": "Popular street market for clothing, jewelry, and artifacts."
+            }
+        ],
+        "heritage": [
+            {
+                "name": "Red Fort",
+                "description": "Historic fortification built by Mughal Emperor Shah Jahan."
+            },
+            {
+                "name": "Qutub Minar",
+                "description": "UNESCO World Heritage site featuring the world's tallest brick minaret."
+            },
+            {
+                "name": "Humayun's Tomb",
+                "description": "Magnificent Mughal-era garden tomb, inspired the architecture of the Taj Mahal."
+            },
+            {
+                "name": "India Gate",
+                "description": "WWI war memorial located on the Rajpath."
+            }
+        ],
+        "food": [
+            {
+                "name": "Karim's",
+                "description": "Historic restaurant in Old Delhi famous for its Mughal cuisine."
+            },
+            {
+                "name": "Paranthe Wali Gali",
+                "description": "Famous lane in Chandni Chowk known for its varieties of fried paranthas."
+            },
+            {
+                "name": "Moti Mahal",
+                "description": "The birthplace of Butter Chicken and Dal Makhani."
+            }
+        ],
+        "nature": [
+            {
+                "name": "Lodhi Gardens",
+                "description": "Sprawling city park containing tombs of the Sayyid and Lodi rulers."
+            },
+            {
+                "name": "Garden of Five Senses",
+                "description": "Park designed to stimulate the senses through art and nature."
+            },
+            {
+                "name": "Okhla Bird Sanctuary",
+                "description": "Wetland sanctuary on the Yamuna river, a haven for migratory birds."
+            }
+        ],
+        "entertainment": [
+            {
+                "name": "Kingdom of Dreams",
+                "description": "India's first live entertainment, theatre, and leisure destination."
+            },
+            {
+                "name": "National Rail Museum",
+                "description": "Highlights the history of railways in India with outdoor exhibits."
+            },
+            {
+                "name": "Connaught Place",
+                "description": "Business and commercial hub with theaters, shops, and restaurants."
+            }
+        ]
+    }
+}

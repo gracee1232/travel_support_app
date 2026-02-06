@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Planner - AI Itinerary Generator</title>
+    <meta name="description" content="Create personalized travel itineraries with AI-powered suggestions">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-icon">✈️</span>
+                <h1>Travel Planner</h1>
+            </div>
+            <div class="header-actions">
+                <span id="session-status" class="status-badge">Form Required</span>
+                <button id="new-session-btn" class="btn btn-secondary">+ New Trip</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Form Panel with Toggle Sections -->
+            <section class="form-panel" id="form-panel">
+                <div class="panel-header">
+                    <h2>📋 Trip Details</h2>
+                    <div class="form-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <span id="progress-text">0/10 fields</span>
+                    </div>
+                </div>
+
+                <form id="trip-form" class="trip-form">
+                    <!-- Toggle Section: Basic Info -->
+                    <div class="form-section toggle-section" data-section="basic">
+                        <div class="section-header" onclick="toggleSection('basic')">
+                            <h3>🎯 Basic Info</h3>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="destinations">Destination(s) *</label>
+                                    <input type="text" id="destinations" placeholder="e.g., Goa, Jaipur" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="group_type">Group Type *</label>
+                                    <select id="group_type" required>
+                                        <option value="">Select...</option>
+                                        <option value="solo">Solo</option>
+                                        <option value="couple">Couple</option>
+                                        <option value="family">Family</option>
+                                        <option value="friends">Friends</option>
+                                        <option value="business">Business</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="traveler_count">Travelers *</label>
+                                    <input type="number" id="traveler_count" min="1" max="50" value="2" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Section: Dates -->
+                    <div class="form-section toggle-section" data-section="dates">
+                        <div class="section-header" onclick="toggleSection('dates')">
+                            <h3>📅 Duration & Dates</h3>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="trip_duration_days">Days *</label>
+                                    <input type="number" id="trip_duration_days" min="1" max="30" value="3" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="start_date">Start Date *</label>
+                                    <input type="date" id="start_date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="end_date">End Date *</label>
+                                    <input type="date" id="end_date" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Section: Schedule -->
+                    <div class="form-section toggle-section" data-section="schedule">
+                        <div class="section-header" onclick="toggleSection('schedule')">
+                            <h3>⏰ Daily Schedule</h3>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="daily_start_time">Start Time *</label>
+                                    <input type="time" id="daily_start_time" value="09:00" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="daily_end_time">End Time *</label>
+                                    <input type="time" id="daily_end_time" value="18:00" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sightseeing_pace">Pace *</label>
+                                    <select id="sightseeing_pace" required>
+                                        <option value="">Select...</option>
+                                        <option value="relaxed">Relaxed (3-4 activities/day)</option>
+                                        <option value="moderate" selected>Moderate (5-6 activities/day)</option>
+                                        <option value="packed">Packed (7-8 activities/day)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Section: Travel -->
+                    <div class="form-section toggle-section" data-section="travel">
+                        <div class="section-header" onclick="toggleSection('travel')">
+                            <h3>🚗 Travel & Preferences</h3>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="travel_mode">Travel Mode *</label>
+                                    <select id="travel_mode" required>
+                                        <option value="">Select...</option>
+                                        <option value="walking">Walking</option>
+                                        <option value="public_transport">Public Transport</option>
+                                        <option value="driving" selected>Car/Cab</option>
+                                        <option value="mixed">Mixed</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="max_travel_distance_km">Max Daily Distance (km)</label>
+                                    <input type="number" id="max_travel_distance_km" min="0" max="500" value="100">
+                                </div>
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label><input type="checkbox" id="cab_pickup_required"> Need Cab Pickup</label>
+                                <label><input type="checkbox" id="traffic_consideration" checked> Consider
+                                    Traffic</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" id="lock-form-btn" class="btn btn-primary btn-large" disabled>
+                        🔒 Lock & Generate Itinerary
+                    </button>
+                    <p class="form-hint">Complete all required fields to generate your itinerary</p>
+                </div>
+            </section>
+
+            <!-- Right Panel: Chat + Itinerary -->
+            <section class="right-panel">
+                <!-- Q&A Chat -->
+                <div class="chat-panel" id="chat-panel">
+                    <div class="panel-header">
+                        <h2>💬 Q&A</h2>
+                    </div>
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-welcome">
+                            <p>Ask questions about your trip:</p>
+                            <div class="quick-questions">
+                                <button class="quick-btn" onclick="askQuestion('Best time to visit?')">Best time to
+                                    visit?</button>
+                                <button class="quick-btn" onclick="askQuestion('Local transport options?')">Local
+                                    transport?</button>
+                                <button class="quick-btn" onclick="askQuestion('Must-try local food?')">Must-try
+                                    food?</button>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="chat-form" class="chat-input-container">
+                        <input type="text" id="chat-input" placeholder="Ask about your trip..." autocomplete="off">
+                        <button type="submit" id="send-btn" class="btn btn-primary">Ask</button>
+                    </form>
+                </div>
+
+                <!-- Itinerary Panel -->
+                <div class="itinerary-panel" id="itinerary-panel" style="display: none;">
+                    <div class="panel-header">
+                        <h2>📍 Your Itinerary</h2>
+                        <div class="view-toggle">
+                            <button class="view-btn active" id="view-daywise"
+                                onclick="switchView('daywise')">Day-wise</button>
+                            <button class="view-btn" id="view-hourwise"
+                                onclick="switchView('hourwise')">Hour-wise</button>
+                        </div>
+                    </div>
+
+                    <div class="itinerary-summary" id="itinerary-summary"></div>
+
+                    <!-- Day-wise View -->
+                    <div class="itinerary-view" id="daywise-view">
+                        <div id="daywise-content"></div>
+                    </div>
+
+                    <!-- Hour-wise View -->
+                    <div class="itinerary-view" id="hourwise-view" style="display: none;">
+                        <div id="hourwise-content"></div>
+                    </div>
+
+                    <!-- AI Suggestions -->
+                    <div class="suggestions-panel" id="suggestions-panel">
+                        <h3>💡 AI Suggestions</h3>
+                        <div id="suggestions-content"></div>
+                    </div>
+
+                    <!-- Pro Tips -->
+                    <div class="protips-panel" id="protips-panel">
+                        <h3>🎯 Pro Tips</h3>
+                        <div id="protips-content"></div>
+                    </div>
+
+                    <!-- Modification Input -->
+                    <div class="modification-input">
+                        <input type="text" id="modify-input"
+                            placeholder="Request changes... e.g., 'add more beach time on Day 1'">
+                        <button id="modify-btn" class="btn btn-secondary" onclick="modifyItinerary()">Modify</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Generating your perfect itinerary...</p>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

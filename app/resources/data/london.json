@@ -1,0 +1,80 @@
+{
+    "city": "London",
+    "country": "United Kingdom",
+    "categories": {
+        "markets": [
+            {
+                "name": "Borough Market",
+                "description": "Historic food market known for high-quality produce and street food."
+            },
+            {
+                "name": "Camden Market",
+                "description": "Eclectic market area with crafts, fashion, and international food."
+            },
+            {
+                "name": "Portobello Road Market",
+                "description": "Famous antiques market in Notting Hill."
+            }
+        ],
+        "heritage": [
+            {
+                "name": "British Museum",
+                "description": "Dedicated to human history, art and culture, housing the Rosetta Stone."
+            },
+            {
+                "name": "Tower of London",
+                "description": "Historic castle on the north bank of the River Thames, home to the Crown Jewels."
+            },
+            {
+                "name": "Westminster Abbey",
+                "description": "Royal church offering 1,000 years of history, the site of every coronation since 1066."
+            },
+            {
+                "name": "Buckingham Palace",
+                "description": "The official London residence and administrative headquarters of the monarch."
+            }
+        ],
+        "food": [
+            {
+                "name": "Rules",
+                "description": "London's oldest restaurant, established in 1798."
+            },
+            {
+                "name": "The Wolseley",
+                "description": "Grand cafe-restaurant known for its European glamour."
+            },
+            {
+                "name": "Dishoom",
+                "description": "Popular restaurant paying homage to the Irani cafes of Bombay."
+            }
+        ],
+        "nature": [
+            {
+                "name": "Hyde Park",
+                "description": "One of the largest Royal Parks, home to the Serpentine Lake."
+            },
+            {
+                "name": "Kew Gardens",
+                "description": "UNESCO World Heritage site with the largest botanical collection in the world."
+            },
+            {
+                "name": "Regent's Park",
+                "description": "Features the Queen Mary's Rose Gardens and the London Zoo."
+            }
+        ],
+        "entertainment": [
+            {
+                "name": "Royal Opera House",
+                "description": "Major performing arts venue and home of The Royal Opera."
+            },
+            {
+                "name": "The Globe Theatre",
+                "description": "Reconstruction of the Elizabethan playhouse associated with William Shakespeare."
+            },
+            {
+                "name": "West End Theatre District",
+                "description": "Global hub for professional theater and musicals."
+            }
+        ]
+    }
+}
