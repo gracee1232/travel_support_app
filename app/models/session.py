@@ -89,9 +89,13 @@ class Session(BaseModel):
             self.soft_preferences.append(preference)
             self.updated_at = datetime.now()
     
-    def update_form(self, extracted_data: dict):
+    def update_form(self, extracted_data: dict, overwrite: bool = False):
         """Merge extracted data into form."""
-        self.form = self.form.merge_extracted(extracted_data)
+        if overwrite:
+            self.form = self.form.update_fields(extracted_data)
+        else:
+            self.form = self.form.merge_extracted(extracted_data)
+        
         self.updated_at = datetime.now()
         
         # Check if form is now complete

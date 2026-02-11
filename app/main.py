@@ -33,7 +33,6 @@ app.include_router(router)
 # Get the frontend directory path
 FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
 
-
 # Mount static files if frontend exists
 if FRONTEND_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
@@ -49,8 +48,7 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "llm_provider": settings.llm_provider,
-        "model": settings.llm_model
+        "engine": "grounded-engine"
     }
 
 
@@ -62,3 +60,4 @@ if __name__ == "__main__":
         port=settings.port,
         reload=settings.debug
     )
+    

@@ -41,6 +41,14 @@ class TravelMode(str, Enum):
     MIXED = "mixed"
 
 
+class BudgetLevel(str, Enum):
+    """Trip budget levels."""
+    ECONOMY = "economy"
+    STANDARD = "standard"
+    LUXURY = "luxury"
+    LAVISH = "lavish"
+
+
 class TravelForm(BaseModel):
     """
     Mandatory travel form - The SOURCE OF TRUTH.
@@ -137,6 +145,10 @@ class TravelForm(BaseModel):
         None,
         description="Preferred mode of travel"
     )
+    budget: Optional[BudgetLevel] = Field(
+        None,
+        description="Trip budget level"
+    )
 
     @field_validator('destinations', mode='before')
     @classmethod
@@ -182,6 +194,15 @@ class TravelForm(BaseModel):
                     current_data[key] = value
         return TravelForm(**current_data)
 
+    def update_fields(self, updates: dict) -> "TravelForm":
+        """Update fields with new values (overwriting existing)."""
+        current_data = self.model_dump()
+        for key, value in updates.items():
+             # Basic validation/cleaning could happen here
+             if key in current_data:
+                 current_data[key] = value
+        return TravelForm(**current_data)
+
 
 # JSON Schema for form validation (used by backend)
 TRAVEL_FORM_SCHEMA = {
@@ -205,13 +226,14 @@ TRAVEL_FORM_SCHEMA = {
         "hotel_checkin_time": {"type": "string", "format": "time"},
         "hotel_checkout_time": {"type": "string", "format": "time"},
         "traffic_consideration": {"type": "boolean"},
-        "travel_mode": {"type": "string", "enum": ["driving", "walking", "public_transport", "mixed"]}
+        "travel_mode": {"type": "string", "enum": ["driving", "walking", "public_transport", "mixed"]},
+        "budget": {"type": "string", "enum": ["economy", "standard", "luxury", "lavish"]}
     },
     "required": [
         "trip_duration_days", "traveler_count", "group_type",
         "destinations", "start_date", "end_date", "daily_start_time", "daily_end_time",
         "max_travel_distance_km", "sightseeing_pace",
-        "cab_pickup_required", "traffic_consideration", "travel_mode"
+        "cab_pickup_required", "traffic_consideration", "travel_mode", "budget"
     ]
 }
 
@@ -236,5 +258,6 @@ FIELD_QUESTIONS = {
     "hotel_checkin_time": "What time is your hotel check-in?",
     "hotel_checkout_time": "What time is your hotel check-out?",
     "traffic_consideration": "Should we consider traffic in the planning?",
-    "travel_mode": "What's your preferred mode of travel? (driving, walking, public transit, or mixed)"
+    "travel_mode": "What's your preferred mode of travel? (driving, walking, public transit, or mixed)",
+    "budget": "What is your budget level? (economy, standard, luxury, or lavish)"
 }

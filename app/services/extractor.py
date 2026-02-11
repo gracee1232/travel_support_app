@@ -88,6 +88,11 @@ class InformationExtractor:
         # Get extraction with low temperature for consistency
         result = await self.llm.chat_json(messages, temperature=0.1)
         
+        # Check for LLM error (fallback mode)
+        if result.get("error"):
+            # Propagate error to flow controller
+            return {"error": result.get("summary", "AI Engine Unavailable")}
+        
         # Clean and validate the result
         return self._clean_extraction(result)
     
