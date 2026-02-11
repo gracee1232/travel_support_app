@@ -78,6 +78,10 @@ class DayPlan(BaseModel):
         ge=0,
         description="Total travel distance for the day"
     )
+    weather: Optional[str] = Field(
+        None,
+        description="Weather snippet for this day"
+    )
     
     def calculate_total_distance(self) -> float:
         """Calculate total distance from activities."""
@@ -152,6 +156,7 @@ class Itinerary(BaseModel):
                     "day_number": day.day_number,
                     "date": day.date,
                     "theme": day.theme,
+                    "weather": day.weather,
                     "total_distance_km": day.total_distance_km,
                     "activities": [
                         {

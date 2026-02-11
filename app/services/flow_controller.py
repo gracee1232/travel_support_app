@@ -93,6 +93,10 @@ class FlowController:
         # Extract information from message
         extracted = await self.extractor.extract(user_message, session.form)
         
+        # Check for critical extraction error (e.g., AI offline)
+        if "error" in extracted:
+            return ResponseType.ERROR, extracted["error"], None
+        
         # Separate soft preferences from form fields
         soft_prefs = extracted.pop("soft_preferences", [])
         for pref in soft_prefs:

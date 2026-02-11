@@ -160,7 +160,7 @@ async def update_form_directly(session_id: str, request: FormUpdateRequest):
     if session.form_locked:
         raise HTTPException(status_code=400, detail="Form is locked. Cannot modify.")
     
-    session.update_form(request.field_updates)
+    session.update_form(request.field_updates, overwrite=True)
     session_store.update(session)
     
     return {

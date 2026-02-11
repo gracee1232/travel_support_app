@@ -25,7 +25,7 @@ const loadingOverlay = document.getElementById('loading-overlay');
 
 // Required fields for progress tracking
 const requiredFields = [
-    'destinations', 'group_type', 'traveler_count',
+    'destinations', 'group_type', 'traveler_count', 'budget',
     'trip_duration_days', 'start_date', 'end_date',
     'daily_start_time', 'daily_end_time', 'sightseeing_pace', 'travel_mode'
 ];
@@ -145,6 +145,7 @@ function getFormData() {
         daily_end_time: document.getElementById('daily_end_time').value,
         sightseeing_pace: document.getElementById('sightseeing_pace').value,
         travel_mode: document.getElementById('travel_mode').value,
+        budget: document.getElementById('budget').value,
         max_travel_distance_km: parseFloat(document.getElementById('max_travel_distance_km').value) || 100,
         cab_pickup_required: document.getElementById('cab_pickup_required').checked,
         traffic_consideration: document.getElementById('traffic_consideration').checked
@@ -262,6 +263,7 @@ function renderDaywiseView(itinerary) {
             <div class="day-card">
                 <div class="day-header" onclick="this.parentElement.classList.toggle('expanded')">
                     <h4>Day ${day.day_number} - ${day.date || ''}</h4>
+                    <span class="day-weather">${day.weather ? `⛅ ${day.weather}` : ''}</span>
                     <span class="day-theme">${day.theme || ''}</span>
                 </div>
                 <div class="day-activities">
@@ -328,16 +330,30 @@ function renderSuggestions(itinerary) {
             { name: 'Relaxation', type: 'rest', desc: 'Take a break', rating: '4.8' }
         ];
 
-    container.innerHTML = suggestions.map(s => `
-        <div class="suggestion-item">
-            <span class="suggestion-icon">${getSuggestionIcon(s.type)}</span>
-            <div class="suggestion-details">
-                <span class="suggestion-name">${s.name}</span>
-                <span class="suggestion-desc">${s.desc}</span>
+    container.innerHTML = suggestions.map(s => {
+        let title = "Suggestion";
+        let desc = "A great spot to explore.";
+        let icon = "✨";
+
+        if (typeof s === 'string') {
+            title = "Quick Tip";
+            desc = s;
+        } else if (s && typeof s === 'object') {
+            title = s.title || s.name || s.label || title;
+            desc = s.description || s.desc || s.info || desc;
+            icon = s.icon || (s.type ? getSuggestionIcon(s.type) : "✨");
+        }
+
+        return `
+            <div class="suggestion-item">
+                <span class="suggestion-icon">${icon}</span>
+                <div class="suggestion-details">
+                    <span class="suggestion-name">${title}</span>
+                    <span class="suggestion-desc">${desc}</span>
+                </div>
             </div>
-            ${s.rating ? `<span class="suggestion-rating">⭐ ${s.rating}</span>` : ''}
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Render Pro Tips

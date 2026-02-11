@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "created_at": "2026-02-11T17:19:23.718582",
+  "summary": "A full day of heritage, food, and local culture in Indore.",
+  "total_days": 1,
+  "total_distance_km": 16.0,
+  "changes_made": [],
+  "change_summary": "",
+  "suggestions": [
+    {
+      "title": "Rajwada Palace",
+      "description": "Historic royal residence.",
+      "icon": "\ud83c\udfdb\ufe0f"
+    },
+    {
+      "title": "Chhappan Dukaan",
+      "description": "Local street food hub.",
+      "icon": "\ud83c\udf74"
+    }
+  ],
+  "pro_tips": [
+    "Arrive early at Rajwada to avoid crowds.",
+    "Carry a water bottle for the walk to Kanch Mandir."
+  ],
+  "days": [
+    {
+      "day_number": 1,
+      "date": "2024-06-01",
+      "theme": null,
+      "weather": "Sunny, 28\u00b0C",
+      "total_distance_km": 16.0,
+      "activities": [
+        {
+          "time": "09:00-10:30",
+          "location": "Rajwada Palace",
+          "type": "sightseeing",
+          "description": "Explore royal architecture.",
+          "distance_km": 2.0,
+          "notes": null
+        },
+        {
+          "time": "10:30-11:00",
+          "location": "Lal Bagh Palace",
+          "type": "sightseeing",
+          "description": "Visit historic gardens.",
+          "distance_km": 1.0,
+          "notes": null
+        },
+        {
+          "time": "11:00-12:30",
+          "location": "Lal Bagh Palace",
+          "type": "sightseeing",
+          "description": "Continue palace tour.",
+          "distance_km": 0.0,
+          "notes": null
+        },
+        {
+          "time": "12:30-13:30",
+          "location": "Chhappan Dukaan",
+          "type": "sightseeing",
+          "description": "Lunch at local stalls.",
+          "distance_km": 2.0,
+          "notes": null
+        },
+        {
+          "time": "13:30-14:00",
+          "location": "Hotel",
+          "type": "sightseeing",
+          "description": "Travel to hotel.",
+          "distance_km": 2.0,
+          "notes": null
+        },
+        {
+          "time": "14:00-15:00",
+          "location": "Hotel",
+          "type": "sightseeing",
+          "description": "Check-in and rest.",
+          "distance_km": 0.0,
+          "notes": null
+        },
+        {
+          "time": "15:00-16:30",
+          "location": "Kanch Mandir",
+          "type": "sightseeing",
+          "description": "Visit temple and surroundings.",
+          "distance_km": 3.0,
+          "notes": null
+        },
+        {
+          "time": "16:30-17:00",
+          "location": "Indore Railway Station",
+          "type": "sightseeing",
+          "description": "Travel to station area.",
+          "distance_km": 2.0,
+          "notes": null
+        },
+        {
+          "time": "17:00-18:30",
+          "location": "Indore Railway Station",
+          "type": "sightseeing",
+          "description": "Explore market and shops.",
+          "distance_km": 0.0,
+          "notes": null
+        },
+        {
+          "time": "18:30-19:00",
+          "location": "Hotel",
+          "type": "sightseeing",
+          "description": "Return to hotel.",
+          "distance_km": 2.0,
+          "notes": null
+        },
+        {
+          "time": "19:00-20:00",
+          "location": "Hotel Restaurant",
+          "type": "sightseeing",
+          "description": "Dinner at hotel.",
+          "distance_km": 0.0,
+          "notes": null
+        },
+        {
+          "time": "20:00-21:00",
+          "location": "Indore City Park",
+          "type": "sightseeing",
+          "description": "Evening stroll.",
+          "distance_km": 2.0,
+          "notes": null
+        }
+      ]
+    }
+  ]
+}

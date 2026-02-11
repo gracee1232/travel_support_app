@@ -33,7 +33,7 @@
                         <div class="progress-bar">
                             <div class="progress-fill" id="progress-fill"></div>
                         </div>
-                        <span id="progress-text">0/10 fields</span>
+                        <span id="progress-text">0/11 fields</span>
                     </div>
                 </div>
 
@@ -64,6 +64,16 @@
                                 <div class="form-group">
                                     <label for="traveler_count">Travelers *</label>
                                     <input type="number" id="traveler_count" min="1" max="50" value="2" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="budget">Budget *</label>
+                                    <select id="budget" required>
+                                        <option value="">Select...</option>
+                                        <option value="economy">Economy</option>
+                                        <option value="standard" selected>Standard</option>
+                                        <option value="luxury">Luxury</option>
+                                        <option value="lavish">Lavish</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
