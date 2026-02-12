@@ -89,6 +89,15 @@ class DayPlan(BaseModel):
         return self.total_distance_km
 
 
+class HotelRecommendation(BaseModel):
+    """A recommended hotel."""
+    name: str = Field(..., description="Name of the hotel")
+    rating: str = Field(..., description="Star rating or category (e.g. '4-star', 'Budget')")
+    location: str = Field(..., description="Location or area")
+    description: str = Field(..., description="Brief description or why it matches the budget")
+    price_range: Optional[str] = Field(None, description="Estimated price range")
+
+
 class Itinerary(BaseModel):
     """Complete travel itinerary."""
     version: int = Field(
@@ -103,6 +112,11 @@ class Itinerary(BaseModel):
     summary: str = Field(
         default="",
         description="Brief summary of the entire trip"
+    )
+    # Hotel Recommendations (Separated from daily plans)
+    hotel_recommendations: list[HotelRecommendation] = Field(
+        default_factory=list,
+        description="List of recommended hotels for the trip"
     )
     days: list[DayPlan] = Field(
         default_factory=list,

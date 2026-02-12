@@ -1,6 +1,6 @@
 /**
- * Travel Planner - Frontend Application
- * Toggle Form, Dual Views, Q&A, Suggestions, Pro Tips
+ * Wanderlust AI - Premium Travel Platform
+ * Dark Theme Frontend
  */
 
 const API_BASE = '/api';
@@ -22,12 +22,11 @@ const chatInput = document.getElementById('chat-input');
 const chatMessages = document.getElementById('chat-messages');
 const itineraryPanel = document.getElementById('itinerary-panel');
 const loadingOverlay = document.getElementById('loading-overlay');
+const loadingText = document.getElementById('loading-text');
 
-// Required fields for progress tracking
 const requiredFields = [
-    'destinations', 'group_type', 'traveler_count', 'budget',
-    'trip_duration_days', 'start_date', 'end_date',
-    'daily_start_time', 'daily_end_time', 'sightseeing_pace', 'travel_mode'
+    'destinations', 'traveler_count', 'trip_duration_days',
+    'start_date', 'end_date'
 ];
 
 // Initialize
@@ -38,65 +37,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     setDefaultDates();
 });
 
-// Session Management
+// Session
 async function initSession() {
     try {
         const response = await fetch(`${API_BASE}/session`, { method: 'POST' });
         const data = await response.json();
         sessionId = data.session_id;
-        console.log('Session created:', sessionId);
     } catch (error) {
-        console.error('Failed to create session:', error);
+        console.error('Session init failed:', error);
         showError('Failed to connect to server. Please refresh.');
     }
 }
 
-// Event Listeners
+// Events
 function setupEventListeners() {
-    // Form field changes
     form.addEventListener('input', () => {
         updateFormProgress();
         autoCalculateEndDate();
     });
-
-    // Lock form button
     lockFormBtn.addEventListener('click', handleLockForm);
-
-    // New session
-    newSessionBtn.addEventListener('click', async () => {
-        location.reload();
-    });
-
-    // Chat form
+    newSessionBtn.addEventListener('click', () => location.reload());
     chatForm.addEventListener('submit', handleChatSubmit);
 }
 
-// Toggle Section
 function toggleSection(sectionName) {
     const section = document.querySelector(`[data-section="${sectionName}"]`);
     if (section) {
         section.classList.toggle('collapsed');
+        const icon = section.querySelector('.toggle-icon');
+        if (icon) {
+            icon.style.transform = section.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0deg)';
+        }
     }
 }
-
-// Make toggle function globally accessible
 window.toggleSection = toggleSection;
 
-// Set Default Dates
 function setDefaultDates() {
     const today = new Date();
     const startDate = new Date(today);
-    startDate.setDate(today.getDate() + 7); // Week from now
-
-    document.getElementById('start_date').value = startDate.toISOString().split('T')[0];
+    startDate.setDate(today.getDate() + 7);
+    const startInput = document.getElementById('start_date');
+    if (startInput) startInput.value = startDate.toISOString().split('T')[0];
     autoCalculateEndDate();
 }
 
-// Auto Calculate End Date
 function autoCalculateEndDate() {
     const startDate = document.getElementById('start_date').value;
     const duration = parseInt(document.getElementById('trip_duration_days').value) || 3;
-
     if (startDate) {
         const start = new Date(startDate);
         const end = new Date(start);
@@ -105,35 +92,27 @@ function autoCalculateEndDate() {
     }
 }
 
-// Update Form Progress
 function updateFormProgress() {
     let filled = 0;
-
     requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
-        if (field && field.value && field.value.trim() !== '') {
-            filled++;
-        }
+        if (field && field.value && field.value.trim() !== '') filled++;
     });
 
     const progress = (filled / requiredFields.length) * 100;
-    progressFill.style.width = `${progress}%`;
-    progressText.textContent = `${filled}/${requiredFields.length} fields`;
+    if (progressFill) progressFill.style.width = `${progress}%`;
+    if (progressText) progressText.textContent = `${filled}/${requiredFields.length} completed`;
 
-    // Enable/disable lock button
     lockFormBtn.disabled = filled < requiredFields.length;
-
     if (filled === requiredFields.length) {
         lockFormBtn.classList.add('ready');
-        sessionStatus.textContent = 'Ready';
+        sessionStatus.textContent = 'Ready to Plan';
         sessionStatus.classList.add('ready');
     }
 }
 
-// Get Form Data
 function getFormData() {
     const destinations = document.getElementById('destinations').value.split(',').map(d => d.trim()).filter(d => d);
-
     return {
         destinations,
         group_type: document.getElementById('group_type').value,
@@ -146,294 +125,301 @@ function getFormData() {
         sightseeing_pace: document.getElementById('sightseeing_pace').value,
         travel_mode: document.getElementById('travel_mode').value,
         budget: document.getElementById('budget').value,
-        max_travel_distance_km: parseFloat(document.getElementById('max_travel_distance_km').value) || 100,
+        max_travel_distance_km: 100,
         cab_pickup_required: document.getElementById('cab_pickup_required').checked,
         traffic_consideration: document.getElementById('traffic_consideration').checked
     };
 }
 
-// Handle Lock Form
 async function handleLockForm() {
     if (lockFormBtn.disabled) return;
-
     const formData = getFormData();
-    showLoading(true);
+
+    await showLoadingSequence([
+        "Analyzing destination trends...",
+        "Checking weather forecasts...",
+        "Finding top-rated stays...",
+        "Building your itinerary...",
+        "Finalizing your trip plan..."
+    ]);
 
     try {
-        // Submit and lock form
         const response = await fetch(`${API_BASE}/form/${sessionId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
-
-        if (!response.ok) {
-            throw new Error('Failed to lock form');
-        }
+        if (!response.ok) throw new Error('Failed to lock form');
 
         formLocked = true;
         disableFormInputs();
-        sessionStatus.textContent = 'Form Locked';
-        sessionStatus.classList.add('locked');
-        lockFormBtn.textContent = '✓ Form Locked';
-        lockFormBtn.disabled = true;
-
-        // Generate itinerary
+        sessionStatus.textContent = 'Planning...';
         await generateItinerary();
-
+        itineraryPanel.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
         console.error('Error:', error);
         showError('Failed to submit form. Please try again.');
-    } finally {
         showLoading(false);
     }
 }
 
-// Generate Itinerary
+async function showLoadingSequence(messages) {
+    showLoading(true);
+    for (const msg of messages) {
+        loadingText.textContent = msg;
+        await new Promise(r => setTimeout(r, 800));
+    }
+}
+
 async function generateItinerary() {
     try {
         const response = await fetch(`${API_BASE}/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session_id: sessionId,
-                message: 'generate itinerary'
-            })
+            body: JSON.stringify({ session_id: sessionId, message: 'generate itinerary' })
         });
-
         const data = await response.json();
-
         if (data.itinerary) {
             currentItinerary = data.itinerary;
             renderItinerary(data.itinerary);
             itineraryPanel.style.display = 'block';
+            showLoading(false);
+            sessionStatus.textContent = 'Trip Ready';
         }
-
     } catch (error) {
         console.error('Failed to generate itinerary:', error);
+        showLoading(false);
         showError('Failed to generate itinerary. Please try again.');
     }
 }
 
-// Render Itinerary
+// ===== RENDER ITINERARY =====
+
 function renderItinerary(itinerary) {
-    // Summary
     const summary = document.getElementById('itinerary-summary');
     const totalDays = itinerary.days?.length || 0;
-    const totalDistance = itinerary.total_distance_km ||
-        itinerary.days?.reduce((sum, day) => sum + (day.total_distance_km || 0), 0) || 0;
+    const firstCity = itinerary.days?.[0]?.activities?.[0]?.location || 'Your Destination';
 
     summary.innerHTML = `
         <h3>${itinerary.summary || 'Your Personalized Itinerary'}</h3>
-        <div class="stats">
-            <span>📅 ${totalDays} days</span>
-            <span>📍 ${totalDistance.toFixed(1)} km total</span>
-            <span>🎫 Version ${itinerary.version || 1}</span>
+        <div class="summary-stats">
+            <div class="stat-item">
+                <span class="stat-icon">${totalDays}</span>
+                <span>Days</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">A</span>
+                <span>${firstCity}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">AI</span>
+                <span>Custom Curated</span>
+            </div>
         </div>
     `;
 
-    // Day-wise view
+    renderHotels(itinerary);
     renderDaywiseView(itinerary);
-
-    // Hour-wise view
     renderHourwiseView(itinerary);
-
-    // Suggestions
     renderSuggestions(itinerary);
-
-    // Pro Tips
     renderProTips(itinerary);
 }
 
-// Render Day-wise View
+// ===== HOTELS =====
+
+function renderHotels(itinerary) {
+    const container = document.getElementById('hotel-content');
+    const panel = document.getElementById('hotel-panel');
+
+    if (!itinerary.hotel_recommendations || itinerary.hotel_recommendations.length === 0) {
+        panel.style.display = 'none';
+        return;
+    }
+
+    panel.style.display = 'block';
+
+    // Group by category
+    const categories = { 'Budget': [], 'Mid-Range': [], 'Luxury': [] };
+    itinerary.hotel_recommendations.forEach(h => {
+        const rating = (h.rating || '').toLowerCase();
+        if (rating.includes('budget') || rating.includes('economy')) categories['Budget'].push(h);
+        else if (rating.includes('mid') || rating.includes('standard') || rating.includes('3') || rating.includes('4')) categories['Mid-Range'].push(h);
+        else if (rating.includes('luxury') || rating.includes('premium') || rating.includes('5')) categories['Luxury'].push(h);
+        else categories['Mid-Range'].push(h); // default
+    });
+
+    let html = '';
+    for (const [category, hotels] of Object.entries(categories)) {
+        if (hotels.length === 0) continue;
+        const cls = category.toLowerCase().replace('-', '-');
+        html += `<div class="hotel-category">
+            <div class="category-label ${cls}">${category}</div>
+            <div class="hotel-grid">
+                ${hotels.map(h => {
+            const badgeCls = category.toLowerCase().replace('-', '-');
+            const img = `https://source.unsplash.com/400x200/?hotel,${category.toLowerCase()}&sig=${Math.random()}`;
+            return `
+                    <div class="hotel-card">
+                        <div class="hotel-image-placeholder" style="background-image: url('${img}')">
+                            <span class="hotel-badge ${badgeCls}">${category}</span>
+                        </div>
+                        <div class="hotel-content">
+                            <h4>${h.name}</h4>
+                            <div class="hotel-location">${h.location}</div>
+                            <p class="hotel-desc">${h.description}</p>
+                            <div class="hotel-price">${h.price_range || '---'}</div>
+                        </div>
+                    </div>`;
+        }).join('')}
+            </div>
+        </div>`;
+    }
+
+    container.innerHTML = html;
+}
+
+// ===== DAY VIEW =====
+
 function renderDaywiseView(itinerary) {
     const container = document.getElementById('daywise-content');
-
     if (!itinerary.days || itinerary.days.length === 0) {
-        container.innerHTML = '<p class="empty-state">No days in itinerary</p>';
+        container.innerHTML = '<p class="text-muted">No days generated.</p>';
         return;
     }
 
     container.innerHTML = itinerary.days.map(day => {
-        const activities = day.activities || [];
-        const displayActivities = activities;
-        const remainingCount = 0;
-
         return `
             <div class="day-card">
                 <div class="day-header" onclick="this.parentElement.classList.toggle('expanded')">
-                    <h4>Day ${day.day_number} - ${day.date || ''}</h4>
-                    <span class="day-weather">${day.weather ? `⛅ ${day.weather}` : ''}</span>
-                    <span class="day-theme">${day.theme || ''}</span>
+                    <div>
+                        <div class="day-number">Day ${day.day_number}</div>
+                        <h4>${day.theme || 'Explore'}</h4>
+                    </div>
+                    <div class="day-meta">
+                        <span>${day.date || ''}</span>
+                        ${day.weather ? `<span class="weather-tag">${day.weather}</span>` : ''}
+                    </div>
                 </div>
                 <div class="day-activities">
-                    ${displayActivities.map(act => `
+                    ${(day.activities || []).map(act => {
+            const type = (act.type || act.activity_type || 'sightseeing').toLowerCase();
+            return `
                         <div class="activity-item">
-                            <span class="activity-time">${act.time_slot || act.time || ''}</span>
-                            <span class="activity-icon">${getActivityIcon(act.type || act.activity_type)}</span>
-                            <div class="activity-details">
-                                <div class="activity-location">${act.location || ''}</div>
-                                <div class="activity-description">${act.description || ''}</div>
+                            <div class="activity-time">${act.time_slot || act.time || ''}</div>
+                            <div class="activity-dot ${type}"></div>
+                            <div class="activity-card">
+                                <div class="activity-type-tag ${type}">${formatType(type)}</div>
+                                <div class="activity-title">${act.location}</div>
+                                <p class="activity-desc">${act.description}</p>
+                                ${act.duration_minutes ? `<div class="activity-duration">${act.duration_minutes} min</div>` : ''}
                             </div>
-                        </div>
-                    `).join('')}
-                    ${remainingCount > 0 ? `<p class="more-activities">... and ${remainingCount} more activities</p>` : ''}
+                        </div>`;
+        }).join('')}
                 </div>
-            </div>
-        `;
+            </div>`;
     }).join('');
 }
 
-// Render Hour-wise View
+function formatType(type) {
+    const labels = {
+        sightseeing: 'Sightseeing',
+        meal: 'Dining',
+        food: 'Dining',
+        cultural: 'Culture',
+        shopping: 'Shopping',
+        adventure: 'Adventure',
+        checkin: 'Check-in',
+        checkout: 'Checkout',
+        rest: 'Rest',
+        travel: 'Transit',
+        walk: 'Walking',
+        nature: 'Nature'
+    };
+    return labels[type] || type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+// ===== TIMELINE VIEW =====
+
 function renderHourwiseView(itinerary) {
     const container = document.getElementById('hourwise-content');
-
-    if (!itinerary.days || itinerary.days.length === 0) {
-        container.innerHTML = '<p class="empty-state">No activities to display</p>';
-        return;
-    }
-
-    // Flatten all activities with day info
     let allActivities = [];
-    itinerary.days.forEach(day => {
+    (itinerary.days || []).forEach(day => {
         (day.activities || []).forEach(act => {
-            allActivities.push({
-                ...act,
-                dayNumber: day.day_number,
-                date: day.date
-            });
+            allActivities.push({ ...act, day: day.day_number });
         });
     });
 
-    container.innerHTML = `
-        <div class="timeline">
-            ${allActivities.map(act => `
-                <div class="timeline-item">
-                    <span class="time-tag">Day ${act.dayNumber} • ${act.time_slot || act.time || ''}</span>
-                    <h5>${getActivityIcon(act.type || act.activity_type)} ${act.location || ''}</h5>
-                    <p>${act.description || ''}</p>
-                </div>
-            `).join('')}
-        </div>
-    `;
-}
-
-// Render Suggestions
-function renderSuggestions(itinerary) {
-    const container = document.getElementById('suggestions-content');
-
-    // Use backend-provided suggestions or fallback
-    const suggestions = itinerary.suggestions && itinerary.suggestions.length > 0
-        ? itinerary.suggestions
-        : [
-            { name: 'Local Cafe', type: 'cafe', desc: 'Find a cozy spot nearby', rating: '4.5' },
-            { name: 'Relaxation', type: 'rest', desc: 'Take a break', rating: '4.8' }
-        ];
-
-    container.innerHTML = suggestions.map(s => {
-        let title = "Suggestion";
-        let desc = "A great spot to explore.";
-        let icon = "✨";
-
-        if (typeof s === 'string') {
-            title = "Quick Tip";
-            desc = s;
-        } else if (s && typeof s === 'object') {
-            title = s.title || s.name || s.label || title;
-            desc = s.description || s.desc || s.info || desc;
-            icon = s.icon || (s.type ? getSuggestionIcon(s.type) : "✨");
-        }
-
+    container.innerHTML = allActivities.map(act => {
+        const type = (act.type || act.activity_type || 'sightseeing').toLowerCase();
         return `
-            <div class="suggestion-item">
-                <span class="suggestion-icon">${icon}</span>
-                <div class="suggestion-details">
-                    <span class="suggestion-name">${title}</span>
-                    <span class="suggestion-desc">${desc}</span>
-                </div>
+        <div class="activity-item">
+            <div class="activity-time">Day ${act.day}<br>${act.time_slot || act.time || ''}</div>
+            <div class="activity-dot ${type}"></div>
+            <div class="activity-card">
+                <div class="activity-type-tag ${type}">${formatType(type)}</div>
+                <div class="activity-title">${act.location}</div>
+                <p class="activity-desc">${act.description}</p>
             </div>
-        `;
+        </div>`;
     }).join('');
 }
 
-// Render Pro Tips
-function renderProTips(itinerary) {
-    const container = document.getElementById('protips-content');
+// ===== SUGGESTIONS =====
 
-    // Use backend-provided pro tips
-    const tips = itinerary.pro_tips && itinerary.pro_tips.length > 0
-        ? itinerary.pro_tips
-        : [
-            'Book tickets in advance to skip lines.',
-            'Keep water handy and stay hydrated.',
-            'Check local weather before heading out.'
-        ];
+function renderSuggestions(itinerary) {
+    const container = document.getElementById('suggestions-content');
+    const suggestions = itinerary.suggestions || [];
+    if (suggestions.length === 0) {
+        document.getElementById('suggestions-panel').style.display = 'none';
+        return;
+    }
 
-    container.innerHTML = tips.map(tip => `
-        <div class="protip-item">
-            <span class="protip-icon">💡</span>
-            <span>${tip}</span>
+    container.innerHTML = suggestions.map(s => `
+        <div class="suggestion-item">
+            <strong>${s.title || s.name || 'Recommendation'}</strong>
+            <p>${s.description || s.desc || ''}</p>
         </div>
     `).join('');
 }
 
-// Get Suggestion Icon
-function getSuggestionIcon(type) {
-    const icons = {
-        cafe: '☕',
-        restaurant: '🍽️',
-        nightlife: '🍹',
-        relaxation: '💆',
-        outdoor: '🌳',
-        lounge: '🍸',
-        food: '🥘'
-    };
-    return icons[type] || '✨';
-}
+// ===== PRO TIPS =====
 
-// Switch View (Day-wise / Hour-wise)
-function switchView(view) {
-    const daywiseView = document.getElementById('daywise-view');
-    const hourwiseView = document.getElementById('hourwise-view');
-    const daywiseBtn = document.getElementById('view-daywise');
-    const hourwiseBtn = document.getElementById('view-hourwise');
-
-    if (view === 'daywise') {
-        daywiseView.style.display = 'block';
-        hourwiseView.style.display = 'none';
-        daywiseBtn.classList.add('active');
-        hourwiseBtn.classList.remove('active');
-    } else {
-        daywiseView.style.display = 'none';
-        hourwiseView.style.display = 'block';
-        daywiseBtn.classList.remove('active');
-        hourwiseBtn.classList.add('active');
+function renderProTips(itinerary) {
+    const container = document.getElementById('protips-content');
+    const tips = itinerary.pro_tips || [];
+    if (tips.length === 0) {
+        document.getElementById('protips-panel').style.display = 'none';
+        return;
     }
+
+    container.innerHTML = tips.map(t => `
+        <div class="protip-item">
+            <span class="protip-bullet"></span>
+            <span>${t}</span>
+        </div>
+    `).join('');
 }
 
-// Make switch view globally accessible
+// ===== VIEW TOGGLE =====
+
+function switchView(view) {
+    document.getElementById('daywise-view').style.display = view === 'daywise' ? 'block' : 'none';
+    document.getElementById('hourwise-view').style.display = view === 'hourwise' ? 'block' : 'none';
+    document.getElementById('view-daywise').classList.toggle('active', view === 'daywise');
+    document.getElementById('view-hourwise').classList.toggle('active', view === 'hourwise');
+}
 window.switchView = switchView;
 
-// Get Activity Icon
-function getActivityIcon(type) {
-    const icons = {
-        sightseeing: '📍',
-        meal: '🍽️',
-        shopping: '🛍️',
-        adventure: '🎢',
-        cultural: '🏛️',
-        checkin: '🏨',
-        checkout: '🧳',
-        rest: '☕',
-        travel: '🚗'
-    };
-    return icons[type?.toLowerCase()] || '📍';
+function askQuestion(q) {
+    chatInput.value = q;
+    handleChatSubmit(new Event('submit'));
 }
+window.askQuestion = askQuestion;
 
-// Handle Chat Submit
+// ===== CHAT =====
+
 async function handleChatSubmit(e) {
     e.preventDefault();
-
     const message = chatInput.value.trim();
     if (!message) return;
 
@@ -444,110 +430,36 @@ async function handleChatSubmit(e) {
         const response = await fetch(`${API_BASE}/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session_id: sessionId,
-                message: message
-            })
+            body: JSON.stringify({ session_id: sessionId, message })
         });
-
         const data = await response.json();
         addChatMessage(data.message, 'assistant');
-
-        if (data.itinerary) {
-            currentItinerary = data.itinerary;
-            renderItinerary(data.itinerary);
-        }
-
+        if (data.itinerary) renderItinerary(data.itinerary);
     } catch (error) {
-        console.error('Chat error:', error);
-        addChatMessage('Sorry, something went wrong. Please try again.', 'assistant');
+        console.error(error);
+        addChatMessage("Sorry, I encountered an error. Please try again.", 'assistant');
     }
 }
 
-// Ask Question (Quick Questions)
-async function askQuestion(question) {
-    chatInput.value = question;
-    chatForm.dispatchEvent(new Event('submit'));
-}
-
-// Make askQuestion globally accessible
-window.askQuestion = askQuestion;
-
-// Modify Itinerary
-async function modifyItinerary() {
-    const input = document.getElementById('modify-input');
-    const message = input.value.trim();
-    if (!message) return;
-
-    showLoading(true);
-
-    try {
-        const response = await fetch(`${API_BASE}/chat`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session_id: sessionId,
-                message: message
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.itinerary) {
-            currentItinerary = data.itinerary;
-            renderItinerary(data.itinerary);
-            input.value = '';
-
-            // Show change summary in chat
-            if (data.message) {
-                addChatMessage(data.message, 'assistant');
-            }
-        }
-
-    } catch (error) {
-        console.error('Modification error:', error);
-        showError('Failed to modify itinerary. Please try again.');
-    } finally {
-        showLoading(false);
-    }
-}
-
-// Make modifyItinerary globally accessible
-window.modifyItinerary = modifyItinerary;
-
-// Add Chat Message
 function addChatMessage(content, role) {
-    // Remove welcome message if present
-    const welcome = chatMessages.querySelector('.chat-welcome');
-    if (welcome) welcome.remove();
-
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `chat-message ${role}`;
-    msgDiv.textContent = content;
-    chatMessages.appendChild(msgDiv);
+    const div = document.createElement('div');
+    div.className = `chat-message ${role}`;
+    div.textContent = content;
+    chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Disable Form Inputs
-function disableFormInputs() {
-    form.querySelectorAll('input, select').forEach(el => {
-        el.disabled = true;
-    });
+// ===== UTILITIES =====
 
-    // Collapse all sections except basic
-    document.querySelectorAll('.toggle-section').forEach(section => {
-        if (section.dataset.section !== 'basic') {
-            section.classList.add('collapsed');
-        }
-    });
+function disableFormInputs() {
+    form.querySelectorAll('input, select, button').forEach(el => el.disabled = true);
+    document.querySelectorAll('.form-section').forEach(s => s.classList.add('collapsed'));
 }
 
-// Show Loading
 function showLoading(show) {
     loadingOverlay.style.display = show ? 'flex' : 'none';
 }
 
-// Show Error
-function showError(message) {
-    alert(message); // Simple for now, can be enhanced with a toast
+function showError(msg) {
+    alert(msg);
 }
