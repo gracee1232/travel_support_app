@@ -9,6 +9,19 @@ from typing import List, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
+import re
+
+def _is_latin_text(text: str) -> bool:
+    """Check if text is primarily Latin script (English). Rejects Arabic, Cyrillic, CJK, etc."""
+    if not text:
+        return False
+    # Count Latin characters vs total alphabetic characters
+    latin_chars = len(re.findall(r'[a-zA-Z]', text))
+    total_alpha = len(re.findall(r'[^\s\d\W]', text, re.UNICODE))
+    if total_alpha == 0:
+        return False
+    return (latin_chars / total_alpha) > 0.5
+
 class LocalDatabaseService:
     """Service to interact with local hospitality databases."""
     
@@ -90,11 +103,14 @@ class LocalDatabaseService:
         # Basic client-side filtering
         final_results = []
         for r in results:
-            cat = r.get('category', '').lower()
-            name = r.get('name', '').lower()
+            name = r.get('name', '')
+            
+            # Skip non-Latin names (Arabic, Cyrillic, etc.)
+            if not _is_latin_text(name):
+                continue
             
             # Exclude obvious non-hotels if any sneak in
-            if 'sweet' in name or 'store' in name or 'shop' in name:
+            if any(x in name.lower() for x in ['sweet', 'store', 'shop']):
                 continue
                 
             final_results.append(r)
@@ -115,8 +131,9 @@ class LocalDatabaseService:
             results.extend(self._query_db(self.db_domestic, query, (target_name,)))
         if status['is_intl']:
             results.extend(self._query_db(self.db_intl, query, (target_name,)))
-            
-        return results
+        
+        # Filter out non-Latin names
+        return [r for r in results if _is_latin_text(r.get('name', ''))]
 
     def get_areas(self, city_name: str) -> List[Dict]:
         """Fetch areas/attractions for a city."""
@@ -133,11 +150,16 @@ class LocalDatabaseService:
         if status['is_intl']:
             results.extend(self._query_db(self.db_intl, query, (target_name,)))
             
-        # Refined Filtering: Remove boring residential areas
+        # Refined Filtering: Remove boring residential areas AND non-Latin names
         filtered = []
         for r in results:
+            name = r.get('name', '')
             t = r.get('type', '').lower()
             tags = r.get('tags', '').lower()
+            
+            # Skip non-Latin names (Arabic, Cyrillic, etc.)
+            if not _is_latin_text(name):
+                continue
             
             # Whitelist interesting types
             is_interesting = any(x in t for x in ['museum', 'park', 'attraction', 'viewpoint', 'historic', 'monument', 'temple', 'church', 'zoo', 'garden'])
@@ -150,10 +172,11 @@ class LocalDatabaseService:
             if is_interesting or has_good_tags or not is_boring:
                 filtered.append(r)
         
-        # Fallback: If we filtered everything out (e.g., Mumbai only has 'residential'), 
-        # return the top 5 original results so the LLM has SOMETHING to work with.
+        # Fallback: If we filtered everything out, 
+        # return top 5 Latin-named results so the LLM has SOMETHING to work with.
         if not filtered and results:
-             return results[:5]
+             latin_results = [r for r in results if _is_latin_text(r.get('name', ''))]
+             return latin_results[:5] if latin_results else results[:5]
                 
         return filtered
 
