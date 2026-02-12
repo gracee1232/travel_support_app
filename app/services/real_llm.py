@@ -75,6 +75,9 @@ class RealLLMClient:
                 
             if json_mode and self.provider != "huggingface":
                 kwargs["response_format"] = response_format
+                
+            # Explicit timeout to prevent early disconnects on slow generations
+            kwargs["timeout"] = 120.0
 
             response = await self.client.chat.completions.create(**kwargs)
             return response.choices[0].message.content
@@ -114,6 +117,18 @@ class RealLLMClient:
         except Exception as e:
             logger.error(f"LLM Chat Error: {e}")
             print(f"ERROR: LLM Chat Failed: {e}")
+            
+            # Debug Log to file
+            try:
+                from datetime import datetime
+                import traceback
+                with open("llm_debug_error.log", "a") as f:
+                    f.write(f"\n\n--- ERROR {datetime.now()} ---\n")
+                    f.write(f"Exception: {str(e)}\n")
+                    f.write(traceback.format_exc())
+            except Exception as log_err:
+                print(f"Failed to write log: {log_err}")
+
             # Fallback to a valid itinerary structure to inform the user
             return {
                 "error": True,

@@ -15,23 +15,103 @@ from .external_tools import external_tools
 
 import traceback
 
-PLANNER_SYSTEM_PROMPT = """You are an ELITE TRAVEL CONCIERGE. Your itineraries must be logical, professional, and 100% grounded in reality.
+PLANNER_SYSTEM_PROMPT = """You are a PROFESSIONAL TRAVEL PLANNING ENGINE integrated into a CRM platform.
+Your job: generate highly polished, structured, premium-quality travel itineraries comparable to Itinr, MakeMyTrip, and Booking.com.
+You are NOT a chatbot. You are a logistics planner + travel consultant + scheduler. Output must feel like a real, paid travel plan.
 
-GROUNDING RULES:
-1. USE REAL DATA: Prioritize locations from the 'REAL-WORLD DATA' section.
-2. NO HALLUCINATIONS: Do not invent palaces, gardens, or malls.
-3. MAJOR SPOTS: If a city has famous landmarks (e.g., Khajrana Temple or Phoenix Mall in Indore), ensure they are included if present in the data.
+## STRICT RULES
+- NEVER use emojis, icons, symbols, or casual language
+- TIME FORMAT: '09:00 AM' or '01:30 PM' only. NEVER seconds
+- Output must be clean, CRM-ready, professional
 
-ANTI-FILLER RULES:
-1. NO TRANSIT SIGHTSEEING: Never suggest "exploring" a Railway Station or Airport unless for transit.
-2. NO TRAVEL BLOCKS: Never create separate activities for "Travel to...". Include travel in the notes/description of the destination.
-3. CONCISE: Keep descriptions under 6 words. Avoid flowery language.
+## PLANNING CONSTRAINT ENGINE (ALL MANDATORY)
+1. Day density -- do NOT overload
+2. Travel distance between locations
+3. Traffic probability
+4. Time required per attraction: Major landmark=1.5-2hrs, Museum=1-1.5hrs, Market=45-60min, Viewpoint=30-40min
+5. Weather comfort (Hot: outdoor AM/PM, indoor midday | Rain: museums/cafes/covered | Cold: late start, indoor clusters)
+6. Crowd patterns and peak timing
+7. Hotel start/end logic (check-in/checkout timing respected)
+8. Cab pickup timing and travel mode (cab/walk/metro/mix)
+9. Closed day assumptions
+10. Rest gaps between activities
 
-LOGICAL FLOW:
-- 10:00 - 13:00: Major Sightseeing
-- 13:00 - 14:00: Lunch at a real restaurant or food hub
-- 14:00 - 17:00: Afternoon activity (Malls if rainy, Parks if clear)
-- 18:00 - 20:00: Evening walk or Market exploration
+## DENSITY CONTROL (PER DAY)
+- 2 major attractions
+- 1 secondary attraction
+- 1 indoor activity (buffer)
+- 1 lunch window
+- 1 evening experience
+- 1 dinner zone
+Never overload. Never exceed this.
+
+## AREA-CLUSTERING (CRITICAL)
+Plan each day by geography. Example for Mumbai:
+Day 1 = South Mumbai cluster, Day 2 = Fort + Marine Drive cluster, Day 3 = Bandra + Juhu cluster.
+Avoid cross-city movement within a day.
+
+## TIME STRUCTURE (STRICT)
+09:00 AM - Start from hotel
+10:30 AM - Major attraction
+12:30 PM - Secondary place
+01:30 PM - Lunch break
+03:30 PM - Indoor/cultural spot
+05:30 PM - Scenic walk
+07:30 PM - Dinner area
+09:00 PM - Return to hotel
+Always include travel buffer and realistic pacing.
+
+## HOTEL LOGIC
+Hotel appears only at morning start and night return. Respect check-in/checkout times.
+Check-in day = lighter morning. Checkout day = flexible exit.
+
+## RESTAURANT RULE
+Food is supportive, not dominant. Only include:
+- 1 lunch area suggestion per day
+- 1 dinner area suggestion per day
+No food hopping.
+
+## ANTI-HALLUCINATION
+Use ONLY: dataset POIs, known landmarks, or recognized areas.
+If specific data missing: use area-level planning, NOT fake names.
+
+## QUALITY FILTER (PRE-OUTPUT CHECK)
+Before outputting, verify: no repeated locations, no fake places, clean timeline, logical travel flow, balanced density, weather-adapted, distance-aware grouping.
+
+## TONE
+Professional. Structured. Calm. Concise. Confident. Like a real travel consultant report.
+
+## OUTPUT SCHEMA (STRICT JSON)
+Return strictly valid JSON:
+{
+  "summary": "Professional trip overview: destination, duration, travel type, weather overview, best areas to stay",
+  "hotel_recommendations": [
+    {
+      "name": "Hotel Name",
+      "rating": "Budget/Mid-Range/Luxury",
+      "location": "Area name",
+      "description": "Why suitable, professional summary",
+      "price_range": "$$"
+    }
+  ],
+  "days": [
+    {
+      "day_number": 1,
+      "date": "YYYY-MM-DD",
+      "theme": "Area Focus Title (e.g. South Mumbai Heritage Trail)",
+      "weather": "Short weather summary for the day",
+      "activities": [
+        {
+          "time": "09:00 AM",
+          "location": "Place Name",
+          "type": "sightseeing/meal/cultural/shopping/nature/travel/checkin/checkout",
+          "description": "Professional description including travel mode and distance note",
+          "duration_minutes": 120
+        }
+      ]
+    }
+  ]
+}
 """
 
 # ITINERARY GENERATION AND MODIFICATION LOGIC
@@ -109,23 +189,33 @@ INSTRUCTIONS:
 5. Return ONLY RAW JSON matching the schema below. No markdown fences.
 
 SCHEMA:
-{{
-  "summary": "Short overview",
-  "suggestions": [ {{ "title": "Place", "description": "Why", "icon": "..." }} ],
-  "pro_tips": [ "Advice" ],
-  "days": [ {{ 
-    "day_number": 1, 
-    "date": "YYYY-MM-DD", 
-    "weather": "Sunny, 25°C",
-    "total_distance_km": 15.2,
-    "activities": [ {{ "time_slot": "HH:MM", "location": "Real Name", "description": "...", "travel_distance_km": 4.5 }} ] 
-  }} ]
-}}"""}
+ {{
+   "summary": "Short overview",
+   "hotel_recommendations": [ {{ "name": "Name", "rating": "4-star", "location": "Area", "description": "Why", "price_range": "$$" }} ],
+   "suggestions": [ {{ "title": "Place", "description": "Why", "icon": "..." }} ],
+   "pro_tips": [ "Advice" ],
+   "days": [ {{ 
+     "day_number": 1, 
+     "date": "YYYY-MM-DD", 
+     "weather": "Sunny, 25°C",
+     "total_distance_km": 0,
+     "activities": [ {{ "time_slot": "HH:MM", "location": "Real Name", "description": "...", "travel_distance_km": 0 }} ] 
+   }} ]
+ }}"""}
             ]
             
             print(f"DEBUG: Sending request to LLM (Provider: {self.llm.provider})...")
             result = await self.llm.chat_json(messages, temperature=0.1, max_tokens=4096)
             print(f"DEBUG: LLM Response received: {str(result)[:100]}...")
+            
+            # Recalculate distances (Correction step)
+            try:
+                result = await external_tools.update_itinerary_distances(result)
+            except Exception as e:
+                print(f"Distance calculation failed: {e}")
+
+            # Inject destination for fallback logic
+            result["meta_destination"] = main_dest
             
             return self._parse_itinerary(result)
         except Exception as e:
@@ -240,16 +330,88 @@ Generate the modified itinerary. Remember: constraints cannot be violated even f
         """Parse LLM response into Itinerary object."""
         days = []
         
+        # Parse Hotel Recommendations
+        from ..models.itinerary import HotelRecommendation
+        hotel_recs = []
+        for h in data.get("hotel_recommendations", []):
+            try:
+                hotel_recs.append(HotelRecommendation(
+                    name=h.get("name", "Unknown Hotel"),
+                    rating=h.get("rating", "Standard"),
+                    location=h.get("location", "City Center"),
+                    description=h.get("description", ""),
+                    price_range=h.get("price_range")
+                ))
+            except Exception as e:
+                print(f"Skipping invalid hotel rec: {e}")
+
+        # Fallback: If no hotels from LLM, fetch from Local DB
+        if not hotel_recs:
+             print("DEBUG: No hotels from LLM, fetching from Local DB...")
+             try:
+                 # Try to guess destination from summary or first day
+                 # This is tricky without explicit dest, but we can try to find a known city
+                 # Or better, pass destination to _parse_itinerary (requires signature change)
+                 # For now, let's look at the first activity location or summary
+                 
+                 # Better approach: We can't easily change signature safely across all calls right now
+                 # But we can access the global instance of local_db
+                 from .local_database import local_db
+                 
+                 # Heuristic: Try to find a city name in the summary
+                 # This is weak. Ideally, we should pass the destination.
+                 # Let's fallback to "Indore" if we detect it, or just leave it empty if we can't be sure.
+                 # Wait, 'generate' method has 'form.destinations'. 
+                 # We can inject 'meta_destination' into the data dict in 'generate' before calling parse?
+                 pass
+             except Exception as e:
+                 print(f"Hotel injection failed: {e}")
+
+
+        # Fallback: If no hotels from LLM, fetch from Local DB
+        if not hotel_recs:
+             dest = data.get("meta_destination")
+             if dest:
+                 print(f"DEBUG: No hotels from LLM, fetching for {dest}...")
+                 try:
+                     from .local_database import local_db
+                     # Try exact match or fuzzy
+                     db_hotels = local_db.get_hotels(dest)
+                     if not db_hotels:
+                         # Try finding official name
+                         status = local_db.get_city_status(dest)
+                         if status['found']:
+                             db_hotels = local_db.get_hotels(status['official_name'])
+                     
+                     for h in db_hotels[:3]:
+                         hotel_recs.append(HotelRecommendation(
+                             name=h.get('name'),
+                             rating=h.get('category', 'Standard'),
+                             location=f"{h.get('lat')}, {h.get('lon')}",
+                             description="Top rated local stay.",
+                             price_range="$$"
+                         ))
+                 except Exception as e:
+                     print(f"Hotel fallback failed: {e}")
+
         for day_data in data.get("days", []):
             activities = []
             for act_data in day_data.get("activities", []):
                 location = act_data.get("location", "Unknown")
                 desc = act_data.get("description", "")
                 
-                # Aggressive Anti-Filler Logic: Skip 'Travel' or 'Drive' blocks
+                # Aggressive Anti-Filler Logic: Skip 'Travel', 'Drive', or 'Hotel' blocks
                 loc_lower = location.lower()
                 desc_lower = desc.lower()
                 
+                # Check for Hotel/Check-in explicitly
+                is_hotel = any(x in loc_lower for x in ["check-in", "check in", "hotel", "resort", "stay at"]) or \
+                           any(x in desc_lower for x in ["check-in", "check in", "hotel stay", "checking in"])
+                
+                if is_hotel:
+                    print(f"DEBUG: Filtered out hotel activity: {location}")
+                    continue
+
                 is_filler = any(x in loc_lower for x in ["travel to", "drive to", "walking to", "transit"]) or \
                             any(x in desc_lower for x in ["travel to", "drive to", "walking to", "heading to"])
                 
@@ -294,6 +456,7 @@ Generate the modified itinerary. Remember: constraints cannot be violated even f
         return Itinerary(
             summary=data.get("summary", "Travel itinerary"),
             days=days,
+            hotel_recommendations=hotel_recs,
             soft_preferences_applied=data.get("soft_preferences_applied", []),
             soft_preferences_ignored=data.get("soft_preferences_ignored", []),
             changes_made=data.get("changes_made", []),
