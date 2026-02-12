@@ -29,7 +29,7 @@ class LocalDatabaseService:
         # Paths to the databases
         # Current file: .../travel_support_app/app/services/local_database.py
         # root (chatbot): .../
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         self.db_domestic = os.path.join(base_dir, "dataset", "hospitality_dataset.db")
         self.db_intl = os.path.join(base_dir, "dataset", "hospitality_dataset_intl.db")
         
