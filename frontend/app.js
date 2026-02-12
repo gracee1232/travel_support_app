@@ -1,5 +1,5 @@
 /**
- * Wanderlust AI - Premium Travel Platform
+ * Travel AI Planner - Premium Travel Platform
  * Dark Theme Frontend
  */
 
